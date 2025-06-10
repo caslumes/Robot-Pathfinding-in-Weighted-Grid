@@ -10,8 +10,7 @@ def greedy_best_first(grid, start_coords, goal_coords):
 
     open_set = []
     heapq.heappush(open_set, Node(start_cell, g=0, h=heuristic(start_cell, goal_cell)))
-    open_nodes = set()
-    visited = set()
+    visited_coords = set()
 
     time_step = 0
 
@@ -19,7 +18,6 @@ def greedy_best_first(grid, start_coords, goal_coords):
         current_node = heapq.heappop(open_set)
         current_cell = current_node.cell
         current_coords = (current_cell.x, current_cell.y)
-        open_nodes.add(current_coords)
 
         time_step += 1
 
@@ -27,15 +25,16 @@ def greedy_best_first(grid, start_coords, goal_coords):
             path = reconstruct_path(current_node)
 
             total_cost = sum(grid.get_cell(x, y).compute_cost(time_step) for (x, y) in path)
-            return path, total_cost, open_nodes
+            return path, total_cost, visited_coords
 
 
-        if current_coords in visited:
+        if current_coords in visited_coords:
             continue
-        visited.add(current_coords)
+        visited_coords.add(current_coords)
 
         for neighbor in grid.get_neighbors(current_cell):
-            if (neighbor.x, neighbor.y) in visited:
+            neighbor_coords = (neighbor.x, neighbor.y)
+            if neighbor_coords in visited_coords:
                 continue
 
             new_node = Node(
@@ -47,4 +46,4 @@ def greedy_best_first(grid, start_coords, goal_coords):
             heapq.heappush(open_set, new_node)
 
     total_cost = sum(grid.get_cell(x, y).get_cost(0) for (x, y) in path)
-    return None, float('inf'), open_nodes
+    return None, float('inf'), visited_coords

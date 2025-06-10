@@ -1,4 +1,5 @@
 from src.grid.node import Node
+from src.utils import reconstruct_path
 
 
 def depth_first_search(grid, start_coords, goal_coords):
@@ -8,33 +9,27 @@ def depth_first_search(grid, start_coords, goal_coords):
     time_step = 0
 
     stack = [Node(start_cell, g=0)]
-    visited = set()
-    opened_nodes = set()
+    visited_coords = set({Node(start_cell, g=0)})
 
     while stack:
         current_node = stack.pop()
         current_cell = current_node.cell
         current_coords = (current_cell.x, current_cell.y)
-        opened_nodes.add(current_coords)
 
         time_step += 1
 
         if current_coords == (goal_cell.x, goal_cell.y):
-            path = []
-            total_cost = 0
-            while current_node:
-                path.append((current_node.cell.x, current_node.cell.y))
-                total_cost += current_node.cell.compute_cost(time_step)
-                current_node = current_node.parent
-            return path[::-1], total_cost, opened_nodes
+            path = reconstruct_path(current_node)
+            total_cost = sum(grid.get_cell(x, y).compute_cost(time_step) for (x, y) in path)
+            return path, total_cost, visited_coords
 
-        if current_coords in visited:
+        if current_coords in visited_coords:
             continue
-        visited.add(current_coords)
+        visited_coords.add(current_coords)
 
         for neighbor in reversed(grid.get_neighbors(current_cell)):
             neighbor_coords = (neighbor.x, neighbor.y)
-            if neighbor_coords not in visited:
+            if neighbor_coords not in visited_coords:
                 stack.append(Node(cell=neighbor, parent=current_node))
 
-    return [], float("inf"), opened_nodes
+    return [], float("inf"), visited_coords

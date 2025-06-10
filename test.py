@@ -1,5 +1,5 @@
 import random
-seed = 42
+seed = 91
 random.seed(seed)
 
 from src.algorithms.a_star import a_star
@@ -12,17 +12,16 @@ from src.utils import generate_terrain_map, print_path_with_open
 
 
 terrain_types = ['W', 'G', 'M', 'T']
-terrain_weights = [0.25, 0.25, 0.25, 0.25]
+terrain_weights = [0.6, 0.0, 0.4, 0.0]
 
-width = 50
-height = 50
+width = 5
+height = 5
 
 terrain_map = generate_terrain_map(width, height, terrain_types, terrain_weights, seed)
 
 grid = Grid(terrain_map)
 start = (0, 0)
-goal = (49, 49)
-
+goal = (3, 3)
 
 def test_algorithms(grid, start, goal):
     algorithms = {
