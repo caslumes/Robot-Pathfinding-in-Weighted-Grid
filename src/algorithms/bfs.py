@@ -8,8 +8,9 @@ def breadth_first_search(grid, start_coords, goal_coords):
 
     time_step = 0
 
-    queue = deque([Node(start_cell, g=0)])
-    visited_coords = set()
+    start_node = Node(start_cell, g=0)
+    queue = deque([start_node])
+    visited_coords = set({start_node})
 
     while queue:
         current_node = queue.popleft()

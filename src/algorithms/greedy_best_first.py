@@ -9,8 +9,9 @@ def greedy_best_first(grid, start_coords, goal_coords):
     goal_cell = grid.get_cell(*goal_coords)
 
     open_set = []
-    heapq.heappush(open_set, Node(start_cell, g=0, h=heuristic(start_cell, goal_cell)))
-    visited_coords = set()
+    start_node = Node(start_cell, g=0, h=heuristic(start_cell, goal_cell))
+    heapq.heappush(open_set, start_node)
+    visited_coords = set({start_node})
 
     time_step = 0
 
